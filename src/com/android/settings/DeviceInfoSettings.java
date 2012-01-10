@@ -66,6 +66,13 @@ public class DeviceInfoSettings extends RestrictedSettingsFragment {
     private static final String PROPERTY_EQUIPMENT_ID = "ro.ril.fccid";
 
     static final int TAPS_TO_BE_A_DEVELOPER = 7;
+    private static final String KEY_MOD_BUILD_DATE = "build_date";
+    private static final String KEY_DEVICE_CPU = "device_cpu";
+    private static final String KEY_DEVICE_GPU = "device_gpu";
+    private static final String KEY_DEVICE_MEMORY = "device_memory";
+    private static final String KEY_DEVICE_REAR_CAMERA = "device_rear_camera";
+    private static final String KEY_DEVICE_FRONT_CAMERA = "device_front_camera";
+    private static final String KEY_DEVICE_SCREEN_RESOLUTION = "device_screen_resolution";
 
     long[] mHits = new long[3];
     int mDevHitCountdown;
@@ -95,6 +102,19 @@ public class DeviceInfoSettings extends RestrictedSettingsFragment {
         findPreference(KEY_BUILD_NUMBER).setEnabled(true);
         findPreference(KEY_KERNEL_VERSION).setSummary(getFormattedKernelVersion());
         setValueSummary(KEY_RF_VERSION, "ro.rfversion");
+        setValueSummary(KEY_MOD_BUILD_DATE, "ro.build.date");
+
+        addStringPreference(KEY_DEVICE_CPU,
+                SystemProperties.get("ro.device.cpu", getCPUInfo()));
+        addStringPreference(KEY_DEVICE_GPU,
+                SystemProperties.get("ro.device.gpu", null));
+        addStringPreference(KEY_DEVICE_MEMORY, getMemInfo());
+        addStringPreference(KEY_DEVICE_FRONT_CAMERA,
+                SystemProperties.get("ro.device.front_cam", null));
+        addStringPreference(KEY_DEVICE_REAR_CAMERA,
+                SystemProperties.get("ro.device.rear_cam", null));
+        addStringPreference(KEY_DEVICE_SCREEN_RESOLUTION,
+                SystemProperties.get("ro.device.screen_res", null));
 
         if (!SELinux.isSELinuxEnabled()) {
             String status = getResources().getString(R.string.selinux_status_disabled);
