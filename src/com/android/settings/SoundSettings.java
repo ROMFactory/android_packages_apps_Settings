@@ -72,6 +72,7 @@ public class SoundSettings extends SettingsPreferenceFragment implements
     private static final String KEY_RINGTONE = "ringtone";
     private static final String KEY_NOTIFICATION_SOUND = "notification_sound";
     private static final String PREF_LESS_NOTIFICATION_SOUNDS = "less_notification_sounds";
+    private static final String KEY_ALARM_SOUND = "alarm_sound";
     private static final String KEY_CATEGORY_CALLS = "category_calls_and_notification";
     private static final String KEY_DOCK_CATEGORY = "dock_category";
     private static final String KEY_DOCK_AUDIO_SETTINGS = "dock_audio";
@@ -87,6 +88,7 @@ public class SoundSettings extends SettingsPreferenceFragment implements
 
     private static final int MSG_UPDATE_RINGTONE_SUMMARY = 1;
     private static final int MSG_UPDATE_NOTIFICATION_SUMMARY = 2;
+    private static final int MSG_UPDATE_ALARM_SUMMARY = 3;
 
     private CheckBoxPreference mVibrateWhenRinging;
     private CheckBoxPreference mDtmfTone;
@@ -99,6 +101,7 @@ public class SoundSettings extends SettingsPreferenceFragment implements
     private CheckBoxPreference mVolumeAdjustSounds;
     private CheckBoxPreference mVolumeWakeScreen;
     private ListPreference mAnnoyingNotifications;
+    private Preference mAlarmPreference;
 
     private Runnable mRingtoneLookupRunnable;
 
@@ -117,6 +120,9 @@ public class SoundSettings extends SettingsPreferenceFragment implements
                 break;
             case MSG_UPDATE_NOTIFICATION_SUMMARY:
                 mNotificationPreference.setSummary((CharSequence) msg.obj);
+                break;
+            case MSG_UPDATE_ALARM_SUMMARY:
+                mAlarmPreference.setSummary((CharSequence) msg.obj);
                 break;
             }
         }
@@ -189,6 +195,7 @@ public class SoundSettings extends SettingsPreferenceFragment implements
 
         mRingtonePreference = findPreference(KEY_RINGTONE);
         mNotificationPreference = findPreference(KEY_NOTIFICATION_SOUND);
+        mAlarmPreference = findPreference(KEY_ALARM_SOUND);
 
         mAnnoyingNotifications = (ListPreference) findPreference(PREF_LESS_NOTIFICATION_SOUNDS);
         int notificationThreshold = Settings.System.getInt(getContentResolver(),
@@ -244,6 +251,10 @@ public class SoundSettings extends SettingsPreferenceFragment implements
                 if (mNotificationPreference != null) {
                     updateRingtoneName(RingtoneManager.TYPE_NOTIFICATION, mNotificationPreference,
                             MSG_UPDATE_NOTIFICATION_SUMMARY);
+                }
+                if (mAlarmPreference != null) {
+                    updateRingtoneName(RingtoneManager.TYPE_ALARM, mAlarmPreference,
+                            MSG_UPDATE_ALARM_SUMMARY);
                 }
             }
         };
