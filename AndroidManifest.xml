@@ -645,6 +645,27 @@
             <meta-data android:name="com.android.settings.TOP_LEVEL_HEADER_ID"
                 android:resource="@id/sound_settings" />
         </activity>
+        <activity
+            android:name="InitD"
+            android:label="Init.D" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.aokp.romcontrol.SHORTCUT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".cyanogenmod.PropModder">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".util.ShowBuildProp">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
 
         <activity android:name="Settings$BarsSettingsActivity"
                 android:label="@string/interface_bars_title"
