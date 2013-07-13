@@ -20,6 +20,8 @@ import android.app.Fragment;
 import android.util.Log;
 
 import com.android.settings.ChooseLockGeneric.ChooseLockGenericFragment;
+import android.app.FragmentManager;
+import android.view.MenuItem;
 
 /**
  * Stub class for showing sub-settings; we can't use the main Settings class
@@ -37,5 +39,27 @@ public class SubSettings extends Settings {
     protected boolean isValidFragment(String fragmentName) {
         Log.d("SubSettings", "Launching fragment " + fragmentName);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (popFragment()) {
+                    return true;
+                }
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private boolean popFragment() {
+        FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+            return true;
+        }
+        return false;
     }
 }
