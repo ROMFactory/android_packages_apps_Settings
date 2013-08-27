@@ -239,4 +239,11 @@
     <string name="alarm_sound_title">Default alarm sound</string>
     <string name="alarm_sound_dialog_title">Default alarm sound</string>
 
+    <string name="unlock_menu_unlock_title">Menu unlock</string>
+    <string name="unlock_menu_unlock_summary">Pressing the menu button unlocks the device</string>
+
+    <string name="profile_applist_title">Apps</string>
+    <string name="profile_choose_app">Choose app</string>
+    <string name="profiles_add">Add</string>
+
 </resources>

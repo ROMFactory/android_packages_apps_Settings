@@ -134,7 +134,6 @@
         <item>2</item>
     </string-array>
 
-    <!-- Wi-Fi settings. Presented as a list dialog to the user to choose the W
     <string-array name="wifi_countrycode_entries">
         <item>United States</item>
         <item>Canada, Taiwan</item>
@@ -163,7 +162,6 @@
         <item>BR</item>
     </string-array>
 
-    <!-- Arrays for root access capability -->
     <string-array name="root_access_entries">
         <item>@string/root_access_none</item>
         <item>@string/root_access_apps</item>
@@ -191,6 +189,5 @@
         <item>2</item>
         <item>3</item>
     </string-array>
-
 
 </resources>
