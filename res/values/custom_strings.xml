@@ -27,6 +27,10 @@
     <string name="header_category_interface">Interface</string>
     <string name="performance_settings">Performance</string>
 
+    <!-- Main list strings -->
+    <string name="header_category_interface">Interface</string>
+
+    <!-- Volume panel tweaks -->
     <string name="volume_adjust_sounds_enable_title">Volume adjust sound</string>
      <!-- Sound settings screen, setting check box summary -->
     <string name="volume_adjust_sounds_enable_summary">Play sound when adjusting volume with hard keys</string>
@@ -44,10 +48,8 @@
     <string name="wifi_setting_countrycode_disabled">Enable Wi-Fi to change this option.</string>
 
     <string name="quick_links_title">Quick Links</string>
+    <string name="bars_and_menus_settings">Visual Components</string>
      
-    <!-- Rom Settings -->
-    <string name="rom_control_title">ROM Settings</string>
-
     <!-- Launcher settings  -->
     <string name="launcher_settings_title">Launcher</string>
 
@@ -55,5 +57,6 @@
 
     <!-- Lockscreen battery ring -->
     <string name="battery_around_lockscreen_ring">Battery around unlock ring</string>
+    <string name="volume_ring_only_description">Ringtone</string>
 
 </resources>
