@@ -73,6 +73,11 @@
             android:persistent="false"
             android:ringtoneType="alarm" />
 
+    <PreferenceScreen
+        android:key="quiet_hours_settings"
+        android:fragment="com.android.settings.omnikang.QuietHours"
+        android:title="@string/quiet_hours_title" />
+
     <CheckBoxPreference
             android:key="dtmf_tone"
             android:title="@string/dtmf_tone_enable_title"
