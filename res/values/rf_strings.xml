@@ -233,6 +233,7 @@
     <string name="app_halo_label_white">Whitelist from HALO</string>
 
     <string name="notification_light_settings">Notification light</string>
+    <string name="battery_light_settings">Battery light</string>
 
     <!-- default alarm tone -->
     <string name="alarm_sound_title">Default alarm sound</string>

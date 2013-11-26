@@ -69,13 +69,18 @@
         <PreferenceScreen
                 android:key="notification_light"
                 android:title="@string/notification_light_settings"
-                android:fragment="org.omnirom.omnigears.notificationlight.NotificationLightSettings" />
+                android:fragment="org.pcarenza.controlroom.notificationlight.NotificationLightSettings" />
 
         <CheckBoxPreference
             android:key="wake_when_plugged_or_unplugged"
             android:title="@string/wake_when_plugged_or_unplugged_title"
             android:summary="@string/wake_when_plugged_or_unplugged_summary"
             android:defaultValue="false" />
+
+        <PreferenceScreen
+                android:key="battery_light"
+                android:title="@string/battery_light_settings"
+                android:fragment="org.pcarenza.controlroom.batterylight.BatteryLightSettings" />
 
         <PreferenceScreen
                 android:key="wifi_display"
