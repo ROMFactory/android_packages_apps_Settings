@@ -19,7 +19,7 @@
     <!-- Setting checkbox title for root access -->
     <string name="root_access">Root access</string>
     <string name="root_access_warning_title">Allow root access?</string>
-    <string name="root_access_warning_message">Allowing applications to request root access is very dangerous and c
+    <string name="root_access_warning_message">Allowing applications to request root access is very dangerous!</string>
     <string name="root_access_none">Disabled</string>
     <string name="root_access_apps">Apps only</string>
     <string name="root_access_adb">ADB only</string>
@@ -179,5 +179,10 @@
     <!-- Device specific settings -->
     <string name="quick_links_title">Quick Links</string>
     <string name="advanced_settings_title">Device options</string>
+
+    <!--  development shortcut -->
+    <string name="development_shortcut_title">Development shortcut</string>
+    <string name="development_shortcut_summary">Enable \'wipe data\' and \'force close\' options in notification area and recent apps list</string>
+
 
 </resources>
