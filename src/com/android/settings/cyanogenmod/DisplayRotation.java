@@ -59,8 +59,8 @@ public class DisplayRotation extends SettingsPreferenceFragment
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        boolean hasRotationLock = this.getResources().getBoolean(com.android
-                .internal.R.bool.config_hasRotationLockSwitch);
+        boolean hasRotationLock = false;
+	// motos don't have a rotation lock switch in the hw
 
         super.onCreate(savedInstanceState);
 
