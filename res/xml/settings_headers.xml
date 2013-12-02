@@ -73,7 +73,7 @@
         android:title="@string/bars_and_menus_settings"
         android:breadCrumbTitle="@string/bars_and_menus_settings"
         android:fragment="org.pcarenza.controlroom.BarsAndMenusSettings"
-	android:drawable="@drawable/ic_smokestack"
+	android:icon="@drawable/ic_action_smokestack"
     />
 
     <!-- DEVICE -->
