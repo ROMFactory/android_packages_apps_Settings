@@ -18,9 +18,6 @@
         android:title="@string/about_settings">
 
 
-		<PreferenceScreen android:key="xenon_logo"
-			android:layout="@layout/logo_row" />
-
 	<PreferenceScreen android:key="additional_system_update_settings"
             android:title="@string/system_update_settings_list_item_title">
             <intent android:action="android.intent.action.MAIN"
@@ -108,8 +105,8 @@
         <!-- XeHD version -->
         <Preference android:key="xehd_version"
                 style="?android:preferenceInformationStyle"
-                android:title="@string/xehd_version"
-                android:summary="@string/xehd_version_default" />
+                android:title="@string/rf_version"
+                android:summary="@string/rf_version_default" />
                 
         <!-- Device firmware version -->
         <Preference android:key="firmware_version" 
