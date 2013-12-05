@@ -69,20 +69,32 @@
         android:icon="@drawable/ic_settings_launcher" />
 
     <header
-        android:id="@+id/bars_and_menus"
-        android:title="@string/bars_and_menus_settings"
-        android:breadCrumbTitle="@string/bars_and_menus_settings"
-        android:fragment="org.pcarenza.controlroom.BarsAndMenusSettings"
-	android:icon="@drawable/ic_action_smokestack"
-    />
+        android:id="@+id/interface_bars"
+        android:title="@string/interface_bars_title"
+        android:breadCrumbTitle="@string/interface_bars_title"
+        android:fragment="org.pcarenza.controlroom.interfacesettings.BarsSettings"
+        android:icon="@drawable/ic_bars" />
 
     <header
-	android:id="@+id/notification_settings"
-	android:title="@string/notification_settings"
-	android:breadCrumbTitle="@string/notification_settings"
-	android:fragment="org.pcarenza.controlroom.NotificationDrawerStyle"
-        android:icon="@drawable/ic_action_ic_settings_notifications"
-    />
+        android:id="@+id/interface_menus"
+        android:title="@string/interface_menus_title"
+        android:breadCrumbTitle="@string/interface_menus_title"
+        android:fragment="org.pcarenza.controlroom.interfacesettings.MenusSettings"
+        android:icon="@drawable/ic_menus" />
+
+    <header
+        android:id="@+id/interface_notification_panel"
+        android:title="@string/interface_notification_panel_title"
+        android:breadCrumbTitle="@string/interface_notification_panel_title"
+        android:fragment="org.pcarenza.controlroom.interfacesettings.NotificationPanelSettings"
+        android:icon="@drawable/ic_notifications" />
+
+    <header
+        android:id="@+id/interface_more"
+        android:title="@string/interface_more_title"
+        android:breadCrumbTitle="@string/interface_more_title"
+        android:fragment="org.pcarenza.controlroom.interfacesettings.MoreInterfaceSettings"
+        android:icon="@drawable/empty_icon" />
 
     <!-- DEVICE -->
     <header android:id="@+id/device_section"

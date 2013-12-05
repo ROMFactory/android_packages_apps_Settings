@@ -60,4 +60,9 @@
     <string name="battery_around_lockscreen_ring">Battery around unlock ring</string>
     <string name="volume_ring_only_description">Ringtone</string>
 
+    <string name="interface_more_title">More\u2026</string>
+    <string name="interface_bars_title">Bars</string>
+    <string name="interface_menus_title">Menus</string>
+    <string name="interface_notification_panel_title">Notification Drawer</string>
+
 </resources>
