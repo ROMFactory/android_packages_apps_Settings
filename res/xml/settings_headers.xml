@@ -81,6 +81,7 @@
 	android:title="@string/notification_settings"
 	android:breadCrumbTitle="@string/notification_settings"
 	android:fragment="org.pcarenza.controlroom.NotificationDrawerStyle"
+        android:icon="@drawable/ic_action_ic_settings_notifications"
     />
 
     <!-- DEVICE -->
