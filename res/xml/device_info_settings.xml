@@ -103,7 +103,7 @@
                 android:summary="@string/device_info_default"/>
                 
         <!-- XeHD version -->
-        <Preference android:key="xehd_version"
+        <Preference android:key="rf_version"
                 style="?android:preferenceInformationStyle"
                 android:title="@string/rf_version"
                 android:summary="@string/rf_version_default" />
