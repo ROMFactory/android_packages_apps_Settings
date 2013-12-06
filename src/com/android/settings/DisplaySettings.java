@@ -72,9 +72,6 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
 
     private DisplayManager mDisplayManager;
 
-
-    private static final int DLG_GLOBAL_CHANGE_WARNING = 1;
-
     private CheckBoxPreference mAccelerometer;
     private WarnedListPreference mFontSizePref;
     private CheckBoxPreference mNotificationPulse;
@@ -338,11 +335,6 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
                 Settings.System.getUriFor(Settings.System.ACCELEROMETER_ROTATION), true,
                 mAccelerometerRotationObserver);
 
-        if (mWifiDisplayPreference != null) {
-            getActivity().registerReceiver(mReceiver, new IntentFilter(
-                    DisplayManager.ACTION_WIFI_DISPLAY_STATUS_CHANGED));
-            mWifiDisplayStatus = mDisplayManager.getWifiDisplayStatus();
-        }
 
         updateState();
     }
@@ -357,9 +349,6 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         // Display rotation observer
         getContentResolver().unregisterContentObserver(mAccelerometerRotationObserver);
 
-        if (mWifiDisplayPreference != null) {
-            getActivity().unregisterReceiver(mReceiver);
-        }
     }
 
     @Override
@@ -385,23 +374,6 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         if (mScreenSaverPreference != null) {
             mScreenSaverPreference.setSummary(
                     DreamSettings.getSummaryTextWithDreamName(getActivity()));
-        }
-    }
-
-    private void updateWifiDisplaySummary() {
-        if (mWifiDisplayPreference != null) {
-            switch (mWifiDisplayStatus.getFeatureState()) {
-                case WifiDisplayStatus.FEATURE_STATE_OFF:
-                    mWifiDisplayPreference.setSummary(R.string.wifi_display_summary_off);
-                    break;
-                case WifiDisplayStatus.FEATURE_STATE_ON:
-                    mWifiDisplayPreference.setSummary(R.string.wifi_display_summary_on);
-                    break;
-                case WifiDisplayStatus.FEATURE_STATE_DISABLED:
-                default:
-                    mWifiDisplayPreference.setSummary(R.string.wifi_display_summary_disabled);
-                    break;
-            }
         }
     }
 
