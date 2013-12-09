@@ -89,6 +89,7 @@ public class SecuritySettings extends RestrictedSettingsFragment
     // Omni Additions
     private static final String BATTERY_AROUND_LOCKSCREEN_RING = "battery_around_lockscreen_ring";
     private static final String LOCKSCREEN_MAXIMIZE_WIDGETS = "lockscreen_maximize_widgets";
+    private static final String LOCKSCREEN_POWER_MENU = "lockscreen_power_menu";
 
     private PackageManager mPM;
     private DevicePolicyManager mDPM;
@@ -123,6 +124,7 @@ public class SecuritySettings extends RestrictedSettingsFragment
     // Omni Additions
     private CheckBoxPreference mLockRingBattery;
     private CheckBoxPreference mMaximizeKeyguardWidgets;
+    private CheckBoxPreference mLockScreenPowerMenu;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -297,6 +299,13 @@ public class SecuritySettings extends RestrictedSettingsFragment
             mShowPassword = (CheckBoxPreference) root.findPreference(KEY_SHOW_PASSWORD);
             mResetCredentials = root.findPreference(KEY_RESET_CREDENTIALS);
 
+
+        mLockScreenPowerMenu = (CheckBoxPreference) root.findPreference(LOCKSCREEN_POWER_MENU);
+        if (mLockScreenPowerMenu != null) {
+            mLockScreenPowerMenu.setChecked(Settings.Secure.getInt(getContentResolver(),
+                    Settings.Secure.LOCK_SCREEN_POWER_MENU, 1) == 1);
+            mLockScreenPowerMenu.setOnPreferenceChangeListener(this);
+        }
 
         // Show password
         mShowPassword = (CheckBoxPreference) root.findPreference(KEY_SHOW_PASSWORD);
@@ -596,6 +605,9 @@ public class SecuritySettings extends RestrictedSettingsFragment
         } else if (preference == mMaximizeKeyguardWidgets) {
             Settings.System.putInt(getActivity().getApplicationContext().getContentResolver(),
                     Settings.System.LOCKSCREEN_MAXIMIZE_WIDGETS, isToggled(preference) ? 1 : 0);
+        } else if (preference == mLockScreenPowerMenu) {
+            Settings.Secure.putInt(getActivity().getApplicationContext().getContentResolver(),
+                    Settings.Secure.LOCK_SCREEN_POWER_MENU, isToggled(preference) ? 1 : 0);
         } else if (preference == mShowPassword) {
             Settings.System.putInt(getContentResolver(), Settings.System.TEXT_SHOW_PASSWORD,
                     mShowPassword.isChecked() ? 1 : 0);
