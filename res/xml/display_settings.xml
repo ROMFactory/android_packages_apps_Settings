@@ -28,9 +28,9 @@
                 android:fragment="com.android.settings.WallpaperTypeSettings" />
 
         <PreferenceScreen
-                android:key="screen_recorder"
-                android:title="@string/screen_recorder_title"
-                android:fragment="com.android.settings.chameleonos.ScreenRecorderSettings" />
+            android:key="screen_recorder"
+            android:title="@string/screen_recorder_title"
+            android:fragment="com.android.settings.chameleonos.ScreenRecorderSettings" />
 
         <PreferenceScreen
             android:key="display_rotation"
@@ -38,17 +38,17 @@
             android:title="@string/display_rotation_title" />
 
         <ListPreference
-                android:key="screen_timeout"
-                android:title="@string/screen_timeout"
-                android:summary="@string/screen_timeout_summary"
-                android:persistent="false"
-                android:entries="@array/screen_timeout_entries"
-                android:entryValues="@array/screen_timeout_values" />
+            android:key="screen_timeout"
+            android:title="@string/screen_timeout"
+            android:summary="@string/screen_timeout_summary"
+            android:persistent="false"
+            android:entries="@array/screen_timeout_entries"
+            android:entryValues="@array/screen_timeout_values" />
 
         <PreferenceScreen
-                android:key="screensaver"
-                android:title="@string/screensaver_settings_title"
-                android:fragment="com.android.settings.DreamSettings" />
+            android:key="screensaver"
+            android:title="@string/screensaver_settings_title"
+            android:fragment="com.android.settings.DreamSettings" />
 
         <!-- Active display -->
         <PreferenceScreen
@@ -72,10 +72,10 @@
                 android:fragment="org.pcarenza.controlroom.notificationlight.NotificationLightSettings" />
 
         <CheckBoxPreference
-            android:key="wake_when_plugged_or_unplugged"
-            android:title="@string/wake_when_plugged_or_unplugged_title"
-            android:summary="@string/wake_when_plugged_or_unplugged_summary"
-            android:defaultValue="false" />
+                android:key="wake_when_plugged_or_unplugged"
+                android:title="@string/wake_when_plugged_or_unplugged_title"
+                android:summary="@string/wake_when_plugged_or_unplugged_summary"
+                android:persistent="false"/>
 
         <PreferenceScreen
                 android:key="battery_light"
