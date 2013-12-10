@@ -184,5 +184,8 @@
     <string name="development_shortcut_title">Development shortcut</string>
     <string name="development_shortcut_summary">Enable \'wipe data\' and \'force close\' options in notification area and recent apps list</string>
 
+    <string name="lockscreen_power_menu_title">Lock Screen Power Menu</string>
+    <string name="lockscreen_power_menu_summary">prevent the power menu from appearing in the lock screen</string>
+
 
 </resources>

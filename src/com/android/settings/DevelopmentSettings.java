@@ -513,17 +513,6 @@ public class DevelopmentSettings extends RestrictedSettingsFragment
         updateDevelopmentShortcutOptions();
     }
 
-    private void writeAdvancedRebootOptions() {
-        Settings.Secure.putInt(getActivity().getContentResolver(),
-                Settings.Secure.ADVANCED_REBOOT,
-                mAdvancedReboot.isChecked() ? 1 : 0);
-    }
-
-    private void updateAdvancedRebootOptions() {
-        mAdvancedReboot.setChecked(Settings.Secure.getInt(getActivity().getContentResolver(),
-                Settings.Secure.ADVANCED_REBOOT, 0) != 0);
-    }
-
     private void resetDevelopmentShortcutOptions() {
         Settings.Secure.putInt(getActivity().getContentResolver(),
                 Settings.Secure.DEVELOPMENT_SHORTCUT, 0);
@@ -536,37 +525,8 @@ public class DevelopmentSettings extends RestrictedSettingsFragment
     }
 
     private void updateDevelopmentShortcutOptions() {
-        mAdvancedReboot.setChecked(Settings.Secure.getInt(getActivity().getContentResolver(),
+        mDevelopmentShortcut.setChecked(Settings.Secure.getInt(getActivity().getContentResolver(),
                 Settings.Secure.DEVELOPMENT_SHORTCUT, 0) != 0);
-    }
-
-    private void updateAdbOverNetwork() {
-        int port = Settings.Secure.getInt(getActivity().getContentResolver(),
-                Settings.Secure.ADB_PORT, 0);
-        boolean enabled = port > 0;
-
-        updateCheckBox(mAdbOverNetwork, enabled);
-
-        WifiInfo wifiInfo = null;
-
-        if (enabled) {
-            IWifiManager wifiManager = IWifiManager.Stub.asInterface(
-                    ServiceManager.getService(Context.WIFI_SERVICE));
-            try {
-                wifiInfo = wifiManager.getConnectionInfo();
-            } catch (RemoteException e) {
-                Log.e(TAG, "wifiManager, getConnectionInfo()", e);
-            }
-        }
-
-        if (wifiInfo != null) {
-            String hostAddress = NetworkUtils.intToInetAddress(
-                    wifiInfo.getIpAddress()).getHostAddress();
-            mAdbOverNetwork.setSummary(hostAddress + ":" + String.valueOf(port));
-        } else {
-            mAdbOverNetwork.setSummary(R.string.adb_over_network_summary);
-        }
->>>>>>> d434097... New setting under "Debug settings" that enables the development shortcut
     }
 
     private void resetDangerousOptions() {
