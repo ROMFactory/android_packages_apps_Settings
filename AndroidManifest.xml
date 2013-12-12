@@ -1635,6 +1635,7 @@
         />
 
         <activity android:name=".paranoid.Halo" />
+        <activity android:name=".LockscreenTargets" />
 
         <!-- Pseudo-activity used to provide an intent-filter entry point to encryption settings -->
         <activity android:name="Settings$CryptKeeperSettingsActivity"
