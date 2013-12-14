@@ -15,10 +15,6 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <!-- About phone screen,  setting option name-->
-    <string name="mod_version">Omni version</string>
-    <string name="mod_version_default">Unknown</string>
-
     <!-- Main list strings -->
     <string name="header_category_interface">Interface</string>
     <string name="performance_settings">Performance</string>
@@ -188,5 +184,13 @@
 
     <!-- Hostname setting -->
     <string name="device_hostname">Device hostname</string>
+
+    <!-- Themes -->
+    <string name="theme_settings_title">Go Dark</string>
+    <string name="theme_auto_mode_title">Switch theme</string>
+    <string name="theme_auto_mode_off">Manual</string>
+    <string name="theme_auto_mode_lightsensor">On light condition change</string>
+    <string name="theme_auto_mode_twilight">On daytime</string>
+    <string name="theme_auto_switch_mode_error">Automatic light condition change mode is enabled. Manual switching is not possible.</string>
 
 </resources>
