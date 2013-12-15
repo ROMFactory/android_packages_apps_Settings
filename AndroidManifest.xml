@@ -591,7 +591,7 @@
                 <category android:name="com.android.settings.SHORTCUT" />
             </intent-filter>
             <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
-                android:value="org.omnirom.omnigears.interfacesettings.BarSettings" />
+                android:value="org.pcarenza.controlroom.interfacesettings.BarSettings" />
             <meta-data android:name="com.android.settings.TOP_LEVEL_HEADER_ID"
                 android:resource="@id/interface_bars" />
         </activity>
@@ -606,7 +606,7 @@
                 <category android:name="com.android.settings.SHORTCUT" />
             </intent-filter>
             <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
-                android:value="org.omnirom.omnigears.interfacesettings.MenusSettings" />
+                android:value="org.pcarenza.controlroom.interfacesettings.MenusSettings" />
             <meta-data android:name="com.android.settings.TOP_LEVEL_HEADER_ID"
                 android:resource="@id/interface_menus" />
         </activity>
@@ -621,7 +621,7 @@
                 <category android:name="com.android.settings.SHORTCUT" />
             </intent-filter>
             <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
-                android:value="org.omnirom.omnigears.interfacesettings.NotificationPanelSettings" />
+                android:value="org.pcarenza.controlroom.interfacesettings.NotificationPanelSettings" />
             <meta-data android:name="com.android.settings.TOP_LEVEL_HEADER_ID"
                 android:resource="@id/interface_notification_panel" />
         </activity>
@@ -636,7 +636,7 @@
                 <category android:name="com.android.settings.SHORTCUT" />
             </intent-filter>
             <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
-                android:value="org.omnirom.omnigears.interfacesettings.MoreInterfaceSettings" />
+                android:value="org.pcarenza.controlroom.interfacesettings.MoreInterfaceSettings" />
             <meta-data android:name="com.android.settings.TOP_LEVEL_HEADER_ID"
                 android:resource="@id/interface_more" />
         </activity>
