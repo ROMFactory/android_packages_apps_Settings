@@ -1760,6 +1760,8 @@
             </intent-filter>
         </activity>
 
+
+        <activity android:name=".util.ShowBuildProp" />
         <!-- PerformanceControl activities -->
         <activity android:name="com.brewcrewfoo.performance.activities.MainActivity"/>
         <activity android:name="com.brewcrewfoo.performance.activities.PCSettings"/>
