@@ -367,8 +367,4 @@
     <string name="dm_init_d_error">It looks like init.d isn\'t setup properly. Please contact your ROM developer.</string>
     <string name="db_exit">Exit</string>
 
-    <!-- GPS download data over wi-fi only -->
-    <string name="gps_download_data_wifi_only">Download GPS assisted data only over Wi-Fi networks</string>
-
-
 </resources>
