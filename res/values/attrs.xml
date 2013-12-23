@@ -84,12 +84,6 @@
 
     <attr name="apnPreferenceStyle" format="reference" />
 
-    <declare-styleable name="SeekBarPreference">
-        <attr name="min" format="integer" />
-        <attr name="unitsLeft" format="string" />
-        <attr name="unitsRight" format="string" />
-    </declare-styleable>
-
     <declare-styleable name="IntervalSeekBar">
         <attr name="minisb" format="float" />
         <attr name="max" format="float" />
