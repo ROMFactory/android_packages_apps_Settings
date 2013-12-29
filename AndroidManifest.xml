@@ -1753,6 +1753,10 @@
 
         <activity android:name=".paranoid.Halo" />
         <activity android:name=".LockscreenTargets" />
+        <activity
+            android:name=".LockscreenNotifications"
+            android:label="@string/Lockscreen_notifications_header" >
+        </activity>
 
         <!-- "Blacklist settings" UI, used only on voice-capable phone devices. -->
         <activity android:name="Settings$BlacklistSettingsActivity"

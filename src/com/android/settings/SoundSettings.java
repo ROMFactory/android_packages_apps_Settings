@@ -198,45 +198,6 @@ public class SoundSettings extends SettingsPreferenceFragment implements
                 boolean isPhone = activePhoneType != TelephonyManager.PHONE_TYPE_NONE;
                 PreferenceCategory audioCat = (PreferenceCategory) getPreferenceScreen().findPreference("category_volume");
 
-                mVolumeStepsAlarm = (ListPreference) findPreference(KEY_VOLUME_STEPS_ALARM);
-                updateVolumeSteps(mVolumeStepsAlarm.getKey(),mAudioManager.getStreamMaxVolume(mAudioManager.STREAM_ALARM));
-                mVolumeStepsAlarm.setOnPreferenceChangeListener(this);
-
-                mVolumeStepsDTMF = (ListPreference) findPreference(KEY_VOLUME_STEPS_DTMF);
-                if(isPhone){
-                        updateVolumeSteps(mVolumeStepsDTMF.getKey(),mAudioManager.getStreamMaxVolume(mAudioManager.STREAM_DTMF));
-                        mVolumeStepsDTMF .setOnPreferenceChangeListener(this);
-                }
-                else
-                        audioCat.removePreference(mVolumeStepsDTMF);
-
-                mVolumeStepsMusic = (ListPreference) findPreference(KEY_VOLUME_STEPS_MUSIC);
-                updateVolumeSteps(mVolumeStepsMusic.getKey(),mAudioManager.getStreamMaxVolume(mAudioManager.STREAM_MUSIC));
-                mVolumeStepsMusic .setOnPreferenceChangeListener(this);
-
-                mVolumeStepsNotification = (ListPreference) findPreference(KEY_VOLUME_STEPS_NOTIFICATION);
-                updateVolumeSteps(mVolumeStepsNotification.getKey(),mAudioManager.getStreamMaxVolume(mAudioManager.STREAM_NOTIFICATION));
-                mVolumeStepsNotification .setOnPreferenceChangeListener(this);
-
-                mVolumeStepsRing = (ListPreference) findPreference(KEY_VOLUME_STEPS_RING);
-                if(isPhone){
-                        updateVolumeSteps(mVolumeStepsRing.getKey(),mAudioManager.getStreamMaxVolume(mAudioManager.STREAM_RING));
-                        mVolumeStepsRing .setOnPreferenceChangeListener(this);
-                }
-                else
-                        audioCat.removePreference(mVolumeStepsRing);
-
-                mVolumeStepsSystem = (ListPreference) findPreference(KEY_VOLUME_STEPS_SYSTEM);
-                updateVolumeSteps(mVolumeStepsSystem.getKey(),mAudioManager.getStreamMaxVolume(mAudioManager.STREAM_SYSTEM));
-                mVolumeStepsSystem .setOnPreferenceChangeListener(this);
-
-                mVolumeStepsVoiceCall = (ListPreference) findPreference(KEY_VOLUME_STEPS_VOICE_CALL);
-                if(isPhone){
-                        updateVolumeSteps(mVolumeStepsVoiceCall.getKey(),mAudioManager.getStreamMaxVolume(mAudioManager.STREAM_VOICE_CALL));
-                        mVolumeStepsVoiceCall .setOnPreferenceChangeListener(this);
-                }
-                else
-                        audioCat.removePreference(mVolumeStepsVoiceCall);
 
         mVibrateWhenRinging = (CheckBoxPreference) findPreference(KEY_VIBRATE);
         mVibrateWhenRinging.setPersistent(false);
