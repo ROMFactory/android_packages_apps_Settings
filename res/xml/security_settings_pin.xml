@@ -58,6 +58,10 @@
             android:title="@string/lockscreen_power_menu_title"
             android:summary="@string/lockscreen_power_menu_summary" />
 
+        <PreferenceScreen
+            android:title="@string/lockscreen_notifications"
+            android:fragment="com.android.settings.LockscreenNotifications" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -36,10 +36,16 @@
             android:title="@string/owner_info_settings_title"
             android:summary="@string/owner_info_settings_summary"/>
 
+<<<<<<< HEAD
         <CheckBoxPreference
             android:key="see_through"
             android:title="@string/see_through_title"
             android:summary="@string/see_through_summary" />
+=======
+	<PreferenceScreen
+            android:title="@string/lockscreen_notifications"
+            android:fragment="com.android.settings.LockscreenNotifications" />
+>>>>>>> 7d31579... [2/2] Settings: Lockscreen Notifications
 
     </PreferenceCategory>
 
