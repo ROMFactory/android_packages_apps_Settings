@@ -65,8 +65,6 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
     private static final String KEY_CURRENT_INPUT_METHOD = "current_input_method";
     private static final String KEY_INPUT_METHOD_SELECTOR = "input_method_selector";
     private static final String KEY_USER_DICTIONARY_SETTINGS = "key_user_dictionary_settings";
-    private static final String PREF_IME_SWITCHER = "ime_switcher";
-
     // false: on ICS or later
     private static final boolean SHOW_INPUT_METHOD_SWITCHER_SETTINGS = false;
 
@@ -89,7 +87,6 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
     private final ArrayList<PreferenceScreen> mHardKeyboardPreferenceList =
             new ArrayList<PreferenceScreen>();
     private InputManager mIm;
-    private CheckBoxPreference mStatusBarImeSwitcher;
     private InputMethodManager mImm;
     private boolean mIsOnlyImeSettings;
     private Handler mHandler;
@@ -172,16 +169,6 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
         // Build hard keyboard and game controller preference categories.
         mIm = (InputManager)getActivity().getSystemService(Context.INPUT_SERVICE);
         updateInputDevices();
-
-        // Enable or disable mStatusBarImeSwitcher based on boolean value: config_show_IMEswitcher
-        final Preference keyImeSwitcherPref = findPreference(PREF_IME_SWITCHER);
-        if (keyImeSwitcherPref != null) {
-            if (!getResources().getBoolean(com.android.internal.R.bool.config_show_cmIMESwitcher)) {
-                getPreferenceScreen().removePreference(keyImeSwitcherPref);
-            } else {
-                mStatusBarImeSwitcher = (CheckBoxPreference) keyImeSwitcherPref;
-            }
-        }
 
         // Spell Checker
         final Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -290,11 +277,6 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
             }
         }
 
-        if (mStatusBarImeSwitcher != null) {
-            mStatusBarImeSwitcher.setChecked(Settings.System.getInt(getActivity().getContentResolver(),
-                    Settings.System.STATUS_BAR_IME_SWITCHER, 1) != 0);
-        }
-
         // Hard keyboard
         if (!mHardKeyboardPreferenceList.isEmpty()) {
             for (int i = 0; i < sHardKeyboardKeys.length; ++i) {
@@ -374,11 +356,6 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
                         chkPref.isChecked() ? 1 : 0);
                 return true;
             }
-        } else if (preference == mStatusBarImeSwitcher) {
-            Settings.System.putInt(getContentResolver(),
-                    Settings.System.STATUS_BAR_IME_SWITCHER,
-            mStatusBarImeSwitcher.isChecked() ? 1 : 0);
-            return true;
         }
         return super.onPreferenceTreeClick(preferenceScreen, preference);
     }
