@@ -105,13 +105,6 @@
         android:fragment="org.omnirom.omnigears.interfacesettings.AnimationInterfaceSettings"
         android:icon="@drawable/ic_rom_control_animations" />
 
-    <header
-        android:id="@+id/active_display"
-        android:title="@string/active_display_settings"
-        android:breadCrumbTitle="@string/active_display_settings"
-        android:fragment="org.omnirom.omnigears.chameleonos.ActiveDisplaySettings"
-        android:icon="@drawable/ic_settings_actived" />
-
     <!-- DEVICE -->
     <header android:id="@+id/device_section"
         android:title="@string/header_category_device" />
