@@ -181,4 +181,9 @@
     <string name="notifications_height">Notification count</string>
     <string name="notifications_height_summary">Number of notifications displayed at once</string>
 
+    <!-- Quiet hours -->
+    <string name="quiet_hours_battery">Disable battery warning</string>
+    <string name="quiet_hours_battery_on">Battery warning will be disabled</string>
+    <string name="quiet_hours_battery_off">Battery warning will function as normal</string>
+
 </resources>

@@ -38,6 +38,7 @@ public class QuietHours extends SettingsPreferenceFragment implements
     private static final String KEY_QUIET_HOURS_HAPTIC = "quiet_hours_haptic";
     private static final String KEY_QUIET_HOURS_NOTE = "quiet_hours_note";
     private static final String KEY_QUIET_HOURS_TIMERANGE = "quiet_hours_timerange";
+    private static final String QUIET_HOURS_BATTERY = "quiet_hours_battery";
 
     private CheckBoxPreference mQuietHoursEnabled;
     private Preference mQuietHoursNote;
@@ -45,6 +46,7 @@ public class QuietHours extends SettingsPreferenceFragment implements
     private CheckBoxPreference mQuietHoursStill;
     private CheckBoxPreference mQuietHoursDim;
     private CheckBoxPreference mQuietHoursHaptic;
+    private CheckBoxPreference mQuietHoursBattery; 
     private TimeRangePreference mQuietHoursTimeRange;
 
     @Override
@@ -70,6 +72,8 @@ public class QuietHours extends SettingsPreferenceFragment implements
                 (CheckBoxPreference) prefSet.findPreference(KEY_QUIET_HOURS_STILL);
             mQuietHoursHaptic =
                 (CheckBoxPreference) prefSet.findPreference(KEY_QUIET_HOURS_HAPTIC);
+            mQuietHoursBattery =
+                (CheckBoxPreference) prefSet.findPreference(QUIET_HOURS_BATTERY);
             mQuietHoursDim =
                 (CheckBoxPreference) findPreference(KEY_QUIET_HOURS_DIM);
 
@@ -96,6 +100,9 @@ public class QuietHours extends SettingsPreferenceFragment implements
             mQuietHoursHaptic.setChecked(
                     Settings.System.getInt(resolver, Settings.System.QUIET_HOURS_HAPTIC, 0) == 1);
             mQuietHoursHaptic.setOnPreferenceChangeListener(this);
+            mQuietHoursBattery.setChecked(
+                    Settings.System.getInt(resolver, Settings.System.QUIET_HOURS_BATTERY, 0) == 1);
+            mQuietHoursBattery.setOnPreferenceChangeListener(this);
 
             // Remove the notification light setting if the device does not support it
             if (mQuietHoursDim != null && getResources().getBoolean(
@@ -106,6 +113,15 @@ public class QuietHours extends SettingsPreferenceFragment implements
                         resolver, Settings.System.QUIET_HOURS_DIM, 0) == 1);
                 mQuietHoursDim.setOnPreferenceChangeListener(this);
             }
+            // Remove the battery warning light setting if the device does not support it 	243
+            if (mQuietHoursBattery != null && getResources().getBoolean(	
+                        com.android.internal.R.bool.config_intrusiveBatteryLed) == false) {
+                getPreferenceScreen().removePreference(mQuietHoursBattery);
+            } else {
+                mQuietHoursBattery.setChecked(Settings.System.getInt(
+                        resolver, Settings.System.QUIET_HOURS_BATTERY, 0) == 1);
+                mQuietHoursBattery.setOnPreferenceChangeListener(this);
+            }	            
         }
     }
 
@@ -135,6 +151,10 @@ public class QuietHours extends SettingsPreferenceFragment implements
             return true;
         } else if (preference == mQuietHoursHaptic) {
             Settings.System.putInt(resolver, Settings.System.QUIET_HOURS_HAPTIC,
+                    (Boolean) newValue ? 1 : 0);
+            return true;
+        } else if (preference == mQuietHoursBattery) {
+           Settings.System.putInt(resolver, Settings.System.QUIET_HOURS_BATTERY,
                     (Boolean) newValue ? 1 : 0);
             return true;
         }
