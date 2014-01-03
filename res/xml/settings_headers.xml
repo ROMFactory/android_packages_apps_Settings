@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <!-- Copyright (C) 2010 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
@@ -238,7 +236,7 @@
      <header
          android:key="buildprop_modder"
          android:title="@string/propmodder_title"
-         android:fragment="com.android.settings.cyanogenmod.PropModder" />
+         android:fragment="com.android.settings.cyanogenmod.PropModder"/>
 
      <header
         android:id="@+id/initD"
