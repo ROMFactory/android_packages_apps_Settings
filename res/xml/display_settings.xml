@@ -58,6 +58,12 @@
                 android:entryValues="@array/entryvalues_font_size"
                 android:dialogTitle="@string/dialog_title_font_size" />
 
+        <CheckBoxPreference
+            android:key="force_dualpanel"
+            android:title="@string/force_dualpanel_title"
+            android:summary="@string/force_dualpanel_summary"
+            android:defaultValue="false" />
+
         <PreferenceScreen
                 android:key="notification_light"
                 android:title="@string/notification_light_settings"
