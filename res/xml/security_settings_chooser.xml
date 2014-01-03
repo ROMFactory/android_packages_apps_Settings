@@ -93,10 +93,6 @@
             android:title="@string/disable_camera_widget_title"
             android:summary="@string/disable_camera_widget_summary" />
 
-	<PreferenceScreen
-            android:title="@string/lockscreen_notifications"
-            android:fragment="com.android.settings.LockscreenNotifications" />
-
     </PreferenceCategory>
 
 </PreferenceScreen>
