@@ -44,8 +44,10 @@ public class IntentReceiver extends BroadcastReceiver {
        public static final String ENABLED_CLOCK = "voice_tts_clock_enabled";
        public static final String ENABLED_DATE = "voice_tts_date_enabled";
        public static final String INCLUDE_NOTIFICATIONS = "voice_tts_apps_include";
+       public static final String ANNOYING_NOTIFICATION = "voice_tts_annoying_notif";
        public static final String ENABLED_NOTIF = "voice_tts_notif_enabled";
        public static final String ENABLED_NOTIF_READ = "voice_tts_notif_read_enabled";
+       public static final String ENABLED_MUSIC = "voice_tts_music_enabled";
 
        @Override
        public void onReceive(Context context, Intent intent) {

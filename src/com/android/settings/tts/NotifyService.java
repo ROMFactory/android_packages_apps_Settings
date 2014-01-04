@@ -16,6 +16,7 @@
 
 package com.android.settings.tts;
 
+import static android.media.AudioManager.STREAM_MUSIC;
 import static android.media.AudioManager.STREAM_NOTIFICATION;
 import static android.media.AudioManager.STREAM_RING;
 import static android.media.AudioManager.STREAM_SYSTEM;
@@ -35,6 +36,9 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
+import android.media.MediaMetadataRetriever;
+import android.media.RemoteControlClient;
+import android.media.RemoteController;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Bundle;
@@ -77,6 +81,11 @@ public class NotifyService extends Service implements OnInitListener, Runnable {
        private static final String ACTION_SPEAK_NOTIFICATION
                       = "com.android.settings.tts.action.SPEAK_NOTIFICATION";
 
+       private static final String ACTION_SPEAK_MUSIC
+                      = "com.android.settings.tts.action.SPEAK_MUSIC";
+
+       private int mServiceStartId = -1;
+
        private final Date mCurrentTime = new Date();
 
        private Calendar mCalendar;
@@ -98,6 +107,16 @@ public class NotifyService extends Service implements OnInitListener, Runnable {
        private SharedPreferences mShareprefs;
 
        private BroadcastReceiver mReceiver = null;
+
+       private boolean mActive = false;
+       private boolean mMusicActive = false;
+       private boolean mClientIdLost = true;
+       private Metadata mMetadata = new Metadata();
+       private String mTrackMusic;
+
+       private RemoteController mRemoteController;
+
+       private HashMap<String, Long> mAnnoyingNotifications = new HashMap<String, Long>();
 
        private INotificationManager mNM;
        private INotificationListenerWrapper mNotificationListener;
@@ -140,6 +159,8 @@ public class NotifyService extends Service implements OnInitListener, Runnable {
            }
 
            mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+           mRemoteController = new RemoteController(mContext, mRCClientUpdateListener);
+           mAudioManager.registerRemoteController(mRemoteController);
            mNM = INotificationManager.Stub.asInterface(
                     ServiceManager.getService(Context.NOTIFICATION_SERVICE));
            mNotificationListener = new INotificationListenerWrapper();
@@ -147,6 +168,7 @@ public class NotifyService extends Service implements OnInitListener, Runnable {
            mShareprefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
            IntentFilter filter = new IntentFilter();
+           filter.addAction(Intent.ACTION_BATTERY_CHANGED);
            filter.addAction(Intent.ACTION_CONFIGURATION_CHANGED);
            filter.addAction(Intent.ACTION_LOCALE_CHANGED);
            filter.addAction(Intent.ACTION_SCREEN_ON);
@@ -154,6 +176,7 @@ public class NotifyService extends Service implements OnInitListener, Runnable {
            filter.addAction(Intent.ACTION_TIME_CHANGED);
            filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
            filter.addAction(ACTION_SPEAK_NOTIFICATION);
+           filter.addAction(ACTION_SPEAK_MUSIC);
            filter.addAction(IntentReceiver.ACTION_RUN_DRIVEMODE);
            mReceiver = new IntentReceiver();
            Log.i(TAG, "register Receiver");
@@ -167,6 +190,7 @@ public class NotifyService extends Service implements OnInitListener, Runnable {
        @Override
        public void onStart(Intent intent, int startId) {
            super.onStart(intent, startId);
+           mServiceStartId = startId;
            mIntent = intent;
            new Thread(this).start();
 
@@ -286,12 +310,24 @@ public class NotifyService extends Service implements OnInitListener, Runnable {
                      mAudioManager.setStreamMute(STREAM_RING, false);
                      mAudioManager.setStreamVolume(STREAM_SYSTEM, mSysVol, 0);
                  } else if (utteranceId.equals("sms")) {
-                     mAudioManager.setStreamMute(STREAM_NOTIFICATION, false);
+                     if (mMusicActive) {
+                         mAudioManager.setStreamMute(STREAM_MUSIC, false);
+                     } else {
+                         mAudioManager.setStreamMute(STREAM_NOTIFICATION, false);
+                     }
                      mAudioManager.setStreamVolume(STREAM_SYSTEM, mSysVol, 0);
                  } else if (utteranceId.equals("system")) {
-                     mAudioManager.setStreamMute(STREAM_NOTIFICATION, false);
+                     if (mMusicActive) {
+                         mAudioManager.setStreamMute(STREAM_MUSIC, false);
+                     } else {
+                         mAudioManager.setStreamMute(STREAM_NOTIFICATION, false);
+                     }
+                     mAudioManager.setStreamVolume(STREAM_SYSTEM, mSysVol, 0);
+                 } else if (utteranceId.equals("music")) {
+                     mAudioManager.setStreamMute(STREAM_MUSIC, false);
                      mAudioManager.setStreamVolume(STREAM_SYSTEM, mSysVol, 0);
                  }
+                 mAudioManager.abandonAudioFocus(mAudioFocusListener);
             }
         }
 
@@ -310,19 +346,33 @@ public class NotifyService extends Service implements OnInitListener, Runnable {
                 return;
             }
 
+            if (action.equals(IntentReceiver.ACTION_RUN_BOOTCOMPLETE)) {
+                Log.i(TAG, "Drive Mode Boot Complete");
+                return;
+            }
+
             if (mAudioManager.isSilentMode()) {
                 Log.i(TAG, "Not speaking - Silent Mode");
                 return;
             }
 
+            mMusicActive = mAudioManager.isMusicActive();
+
             if (mAudioManager.isStreamMute(STREAM_RING)) {
                 mAudioManager.setStreamMute(STREAM_RING, false);
             } else if (mAudioManager.isStreamMute(STREAM_NOTIFICATION)) {
                 mAudioManager.setStreamMute(STREAM_NOTIFICATION, false);
+            } else if (mAudioManager.isStreamMute(STREAM_MUSIC)) {
+                mAudioManager.setStreamMute(STREAM_MUSIC, false);
             }
 
-            mAudioManager.requestAudioFocus(mAudioFocusListener, STREAM_SYSTEM,
-                AudioManager.AUDIOFOCUS_GAIN);
+            if (mMusicActive) {
+                mAudioManager.requestAudioFocus(mAudioFocusListener, STREAM_SYSTEM,
+                     AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
+            } else {
+                mAudioManager.requestAudioFocus(mAudioFocusListener, STREAM_SYSTEM,
+                     AudioManager.AUDIOFOCUS_GAIN);
+            }
 
             final int voiceVolume = mShareprefs.getInt(IntentReceiver.VOICE_VOLUME, 8);
 
@@ -369,8 +419,13 @@ public class NotifyService extends Service implements OnInitListener, Runnable {
                  final String from = msg.getOriginatingAddress();
                  final String message = msg.getMessageBody();
                  final boolean readSms = mShareprefs.getBoolean(IntentReceiver.ENABLED_SMS_READ, false);
+                 final boolean isMusicActive = mMusicActive;
                  synchronized (sLock) {
-                      am.setStreamMute(STREAM_NOTIFICATION, true);
+                      if (isMusicActive) {
+                          am.setStreamMute(STREAM_MUSIC, true);
+                      } else {
+                          am.setStreamMute(STREAM_NOTIFICATION, true);
+                      }
                       HashMap<String, String> ops = new HashMap<String, String>();
                       mSysVol = am.getStreamVolume(STREAM_SYSTEM);
                       am.setStreamVolume(STREAM_SYSTEM,
@@ -397,8 +452,13 @@ public class NotifyService extends Service implements OnInitListener, Runnable {
                      return;
                  }
 
+                 final boolean isMusicActive = mMusicActive;
                  synchronized (sLock) {
-                      am.setStreamMute(STREAM_NOTIFICATION, true);
+                      if (isMusicActive) {
+                          am.setStreamMute(STREAM_MUSIC, true);
+                      } else {
+                          am.setStreamMute(STREAM_NOTIFICATION, true);
+                      }
                       HashMap<String, String> ops = new HashMap<String, String>();
                       mSysVol = am.getStreamVolume(STREAM_SYSTEM);
                       am.setStreamVolume(STREAM_SYSTEM,
@@ -417,8 +477,13 @@ public class NotifyService extends Service implements OnInitListener, Runnable {
                      return;
                  }
 
+                 final boolean isMusicActive = mMusicActive;
                  synchronized (sLock) {
-                      am.setStreamMute(STREAM_NOTIFICATION, true);
+                      if (isMusicActive) {
+                          am.setStreamMute(STREAM_MUSIC, true);
+                      } else {
+                          am.setStreamMute(STREAM_NOTIFICATION, true);
+                      }
                       HashMap<String, String> ops = new HashMap<String, String>();
                       mSysVol = am.getStreamVolume(STREAM_SYSTEM);
                       am.setStreamVolume(STREAM_SYSTEM,
@@ -437,8 +502,13 @@ public class NotifyService extends Service implements OnInitListener, Runnable {
                      return;
                  }
 
+                 final boolean isMusicActive = mMusicActive;
                  synchronized (sLock) {
-                      am.setStreamMute(STREAM_NOTIFICATION, true);
+                      if (isMusicActive) {
+                          am.setStreamMute(STREAM_MUSIC, true);
+                      } else {
+                          am.setStreamMute(STREAM_NOTIFICATION, true);
+                      }
                       HashMap<String, String> ops = new HashMap<String, String>();
                       mSysVol = am.getStreamVolume(STREAM_SYSTEM);
                       am.setStreamVolume(STREAM_SYSTEM,
@@ -448,43 +518,39 @@ public class NotifyService extends Service implements OnInitListener, Runnable {
                       mTts.speak(mContext.getString(R.string.voice_tts_charge_off),
                                  TextToSpeech.QUEUE_FLUSH, ops);
                  }
-             } else if (action.equals(Intent.ACTION_SCREEN_ON) && mShareprefs.getBoolean(IntentReceiver.ENABLED_CLOCK, false)) {
+             } else if (action.equals(Intent.ACTION_SCREEN_ON)) {
                  if (mTts.isSpeaking()) return;
-                 Log.i(TAG, "Speak Clock screen on");
+                 final boolean speakClock = mShareprefs.getBoolean(IntentReceiver.ENABLED_CLOCK, false);
+                 final boolean speakDate = mShareprefs.getBoolean(IntentReceiver.ENABLED_DATE, false);
+                 if (!speakClock && !speakDate) return;
+
+                 Log.i(TAG, "Speak Clock or Date screen on");
                  final AudioManager am = mAudioManager;
                  if (am.getStreamVolume(STREAM_NOTIFICATION) == 0) {
                      Log.i(TAG, "Not speaking - volume is 0");
                      return;
                  }
 
+                 final boolean isMusicActive = mMusicActive;
                  synchronized (sLock) {
-                      am.setStreamMute(STREAM_NOTIFICATION, true);
+                      if (isMusicActive) {
+                          am.setStreamMute(STREAM_MUSIC, true);
+                      } else {
+                          am.setStreamMute(STREAM_NOTIFICATION, true);
+                      }
                       HashMap<String, String> ops = new HashMap<String, String>();
                       mSysVol = am.getStreamVolume(STREAM_SYSTEM);
                       am.setStreamVolume(STREAM_SYSTEM,
                                voiceVolume, 0);
                       ops.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "system");
                       ops.put(TextToSpeech.Engine.KEY_PARAM_STREAM, STREAM_SYSTEM_STR);
-                      mTts.speak(getSmallTime(), TextToSpeech.QUEUE_FLUSH, ops);
-                 }
-             } else if (action.equals(Intent.ACTION_SCREEN_ON) && mShareprefs.getBoolean(IntentReceiver.ENABLED_DATE, false)) {
-                 if (mTts.isSpeaking()) return;
-                 Log.i(TAG, "Speak Date screen on");
-                 final AudioManager am = mAudioManager;
-                 if (am.getStreamVolume(STREAM_NOTIFICATION) == 0) {
-                     Log.i(TAG, "Not speaking - volume is 0");
-                     return;
-                 }
-
-                 synchronized (sLock) {
-                      am.setStreamMute(STREAM_NOTIFICATION, true);
-                      HashMap<String, String> ops = new HashMap<String, String>();
-                      mSysVol = am.getStreamVolume(STREAM_SYSTEM);
-                      am.setStreamVolume(STREAM_SYSTEM,
-                               voiceVolume, 0);
-                      ops.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "system");
-                      ops.put(TextToSpeech.Engine.KEY_PARAM_STREAM, STREAM_SYSTEM_STR);
-                      mTts.speak(getDateString(), TextToSpeech.QUEUE_FLUSH, ops);
+                      if (speakClock && !speakDate) {
+                          mTts.speak(getSmallTime(), TextToSpeech.QUEUE_FLUSH, ops);
+                      } else if (!speakClock && speakDate) {
+                          mTts.speak(getDateString(), TextToSpeech.QUEUE_FLUSH, ops);
+                      } else if (speakClock && speakDate) {
+                          mTts.speak(getSmallTime() + getDateString(), TextToSpeech.QUEUE_FLUSH, ops);
+                      }
                  }
              } else if (action.equals(ACTION_SPEAK_NOTIFICATION)) {
                  if (mTts.isSpeaking() || !mShareprefs.getBoolean(IntentReceiver.ENABLED_NOTIF, false)) return;
@@ -500,8 +566,13 @@ public class NotifyService extends Service implements OnInitListener, Runnable {
                  }
 
                  final boolean readNotif = mShareprefs.getBoolean(IntentReceiver.ENABLED_NOTIF_READ, false);
+                 final boolean isMusicActive = mMusicActive;
                  synchronized (sLock) {
-                      am.setStreamMute(STREAM_NOTIFICATION, true);
+                      if (isMusicActive) {
+                          am.setStreamMute(STREAM_MUSIC, true);
+                      } else {
+                          am.setStreamMute(STREAM_NOTIFICATION, true);
+                      }
                       HashMap<String, String> ops = new HashMap<String, String>();
                       mSysVol = am.getStreamVolume(STREAM_SYSTEM);
                       am.setStreamVolume(STREAM_SYSTEM,
@@ -516,6 +587,30 @@ public class NotifyService extends Service implements OnInitListener, Runnable {
                                  TextToSpeech.QUEUE_FLUSH, ops);
                       }
                  }
+             } else if (action.equals(ACTION_SPEAK_MUSIC)) {
+                 if (mTts.isSpeaking() || !mShareprefs.getBoolean(IntentReceiver.ENABLED_MUSIC, false)) return;
+                 Log.i(TAG, "Speak Music");
+                 final AudioManager am = mAudioManager;
+                 if (am.getStreamVolume(STREAM_MUSIC) == 0) {
+                     Log.i(TAG, "Not speaking - volume is 0");
+                     return;
+                 }
+
+                 if (mTrackMusic == null) {
+                     return;
+                 }
+
+                 final String trackMusic = mTrackMusic;
+                 synchronized (sLock) {
+                      am.setStreamMute(STREAM_MUSIC, true);
+                      HashMap<String, String> ops = new HashMap<String, String>();
+                      mSysVol = am.getStreamVolume(STREAM_SYSTEM);
+                      am.setStreamVolume(STREAM_SYSTEM,
+                               voiceVolume, 0);
+                      ops.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "music");
+                      ops.put(TextToSpeech.Engine.KEY_PARAM_STREAM, STREAM_SYSTEM_STR);
+                      mTts.speak(mContext.getString(R.string.voice_tts_music) + trackMusic, TextToSpeech.QUEUE_FLUSH, ops);
+                 }
              } else if (action.equals(IntentReceiver.ACTION_RUN_DRIVEMODE)) {
                  if (mTts.isSpeaking()) return;
                  Log.i(TAG, "Speak DriveMode OK");
@@ -525,8 +620,13 @@ public class NotifyService extends Service implements OnInitListener, Runnable {
                      return;
                  }
 
+                 final boolean isMusicActive = mMusicActive;
                  synchronized (sLock) {
-                      am.setStreamMute(STREAM_NOTIFICATION, true);
+                      if (isMusicActive) {
+                          am.setStreamMute(STREAM_MUSIC, true);
+                      } else {
+                          am.setStreamMute(STREAM_NOTIFICATION, true);
+                      }
                       HashMap<String, String> ops = new HashMap<String, String>();
                       mSysVol = am.getStreamVolume(STREAM_SYSTEM);
                       am.setStreamVolume(STREAM_SYSTEM,
@@ -535,8 +635,6 @@ public class NotifyService extends Service implements OnInitListener, Runnable {
                       ops.put(TextToSpeech.Engine.KEY_PARAM_STREAM, STREAM_SYSTEM_STR);
                       mTts.speak(mContext.getString(R.string.voice_tts_engine_started), TextToSpeech.QUEUE_FLUSH, ops);
                  }
-             } else if (action.equals(IntentReceiver.ACTION_RUN_BOOTCOMPLETE)) {
-                 Log.i(TAG, "Drive Mode Boot Complete");
              }
         }
 
@@ -590,7 +688,8 @@ public class NotifyService extends Service implements OnInitListener, Runnable {
         }
 
         private boolean isValidNotification(StatusBarNotification sbn) {
-            return mIncludedApps.contains(sbn.getPackageName());
+            return mIncludedApps.contains(sbn.getPackageName())
+                   && !notificationIsAnnoying(sbn.getPackageName());
         }
 
         private void createIncludedAppsSet(String includedApps) {
@@ -620,6 +719,31 @@ public class NotifyService extends Service implements OnInitListener, Runnable {
             return tickerText != null ? tickerText : "";
         }
 
+        private boolean notificationIsAnnoying(String pkg) {
+            int getLongThreshold = mShareprefs.getInt(IntentReceiver.ANNOYING_NOTIFICATION, 0);
+            final long annoyingNotificationThreshold = ((long) getLongThreshold);
+
+            if (annoyingNotificationThreshold == 0) {
+                return false;
+            }
+
+            if ("android".equals(pkg)) {
+                return false;
+            }
+
+            long currentTime = System.currentTimeMillis();
+            if (mAnnoyingNotifications.containsKey(pkg)
+                && (currentTime - mAnnoyingNotifications.get(pkg)
+                        < annoyingNotificationThreshold)) {
+                // less than threshold; it's an annoying notification!!
+                return true;
+            } else {
+                // not in map or time to re-add
+                mAnnoyingNotifications.put(pkg, currentTime);
+                return false;
+            }
+        }
+
         private void registerNotificationListener() {
             ComponentName cn = new ComponentName(mContext, getClass().getName());
             try {
@@ -636,6 +760,86 @@ public class NotifyService extends Service implements OnInitListener, Runnable {
                 } catch (RemoteException e) {
                      Log.e(TAG, "registerNotificationListener()", e);
                 }
+            }
+        }
+
+        private void updateMusicResources() {
+            mTrackMusic = mMetadata.trackTitle;
+            if (mTrackMusic == null || !mActive) return;
+            Intent intent = new Intent(ACTION_SPEAK_MUSIC);
+            mContext.sendBroadcast(intent);
+        }
+
+        private void playbackStateUpdate(int state) {
+            boolean active;
+            switch (state) {
+                 case RemoteControlClient.PLAYSTATE_PLAYING:
+                      active = true;
+                      break;
+                 case RemoteControlClient.PLAYSTATE_ERROR:
+                 case RemoteControlClient.PLAYSTATE_PAUSED:
+                 default:
+                      active = false;
+                      break;
+            }
+            if (active != mActive) {
+                mActive = active;
+                updateMusicResources();
+            }
+        }
+
+        private RemoteController.OnClientUpdateListener mRCClientUpdateListener =
+                   new RemoteController.OnClientUpdateListener() {
+
+            private String mCurrentTrack = null;
+
+            @Override
+            public void onClientChange(boolean clearing) {
+                if (clearing) {
+                    mMetadata.clear();
+                    mCurrentTrack = null;
+                    mActive = false;
+                    mClientIdLost = true;
+                    updateMusicResources();
+                }
+            }
+
+            @Override
+            public void onClientPlaybackStateUpdate(int state, long stateChangeTimeMs,
+                      long currentPosMs, float speed) {
+                mClientIdLost = false;
+                playbackStateUpdate(state);
+            }
+
+            @Override
+            public void onClientPlaybackStateUpdate(int state) {
+                mClientIdLost = false;
+                playbackStateUpdate(state);
+            }
+
+            @Override
+            public void onClientMetadataUpdate(RemoteController.MetadataEditor data) {
+                mMetadata.trackTitle = data.getString(MediaMetadataRetriever.METADATA_KEY_TITLE,
+                       mMetadata.trackTitle);
+                mClientIdLost = false;
+                if ((mMetadata.trackTitle != null
+                       && !mMetadata.trackTitle.equals(mCurrentTrack))) {
+                    mCurrentTrack = mMetadata.trackTitle;
+                    updateMusicResources();
+                }
+            }
+
+            @Override
+            public void onClientTransportControlUpdate(int transportControlFlags) {
+            }
+        };
+
+
+        class Metadata {
+            private String trackTitle;
+
+            public void clear() {
+                trackTitle = null;
             }
         }
 }
