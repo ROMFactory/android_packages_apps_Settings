@@ -186,4 +186,7 @@
     <string name="quiet_hours_battery_on">Battery warning will be disabled</string>
     <string name="quiet_hours_battery_off">Battery warning will function as normal</string>
 
+    <!-- Hostname setting -->
+    <string name="device_hostname">Device hostname</string>
+
 </resources>
