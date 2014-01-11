@@ -528,4 +528,15 @@
         <item>10000</item>
     </integer-array>
 
+   <!-- Camera sounds -->
+    <string-array name="camera_sounds_entries">	
+        <item>@string/camera_sounds_entry_stock</item>
+        <item>@string/camera_sounds_entry_realistic</item>
+        <item>@string/camera_sounds_entry_off</item>
+    </string-array>
+    <string-array name="camera_sounds_values">
+        <item>1</item>
+        <item>2</item>
+        <item>0</item>
+    </string-array>
 </resources>

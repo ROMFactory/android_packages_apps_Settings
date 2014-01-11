@@ -84,9 +84,16 @@ public class SoundSettings extends SettingsPreferenceFragment implements
     private static final String KEY_VOLUME_WAKE_SCREEN = "volume_wake_screen";
 
     private static final String KEY_QUIET_HOURS = "quiet_hours";
-    private static final String KEY_CAMERA_SOUNDS = "camera_sounds";
+    private static final String KEY_CAMERA_SOUNDS = "camera_click_sound";
     private static final String PROP_CAMERA_SOUND = "persist.sys.camera-sound";
 
+    private static final String KEY_POWER_NOTIFICATIONS = "power_notifications";
+    private static final String KEY_POWER_NOTIFICATIONS_VIBRATE = "power_notifications_vibrate";
+    private static final String KEY_POWER_NOTIFICATIONS_RINGTONE = "power_notifications_ringtone";
+
+    private static final String RING_MODE_NORMAL = "normal";
+    private static final String RING_MODE_VIBRATE = "vibrate";
+    private static final String RING_MODE_MUTE = "mute";
 
     private static final String[] NEED_VOICE_CAPABILITY = {
             KEY_RINGTONE, KEY_DTMF_TONE, KEY_CATEGORY_CALLS,
@@ -101,7 +108,7 @@ public class SoundSettings extends SettingsPreferenceFragment implements
     private CheckBoxPreference mDtmfTone;
     private CheckBoxPreference mSoundEffects;
     private CheckBoxPreference mHapticFeedback;
-    private CheckBoxPreference mCameraSounds;
+    private ListPreference mCameraSounds;
     private Preference mMusicFx;
     private CheckBoxPreference mLockSounds;
     private Preference mRingtonePreference;
@@ -188,10 +195,6 @@ public class SoundSettings extends SettingsPreferenceFragment implements
         mHapticFeedback.setPersistent(false);
         mHapticFeedback.setChecked(Settings.System.getInt(resolver,
                 Settings.System.HAPTIC_FEEDBACK_ENABLED, 1) != 0);
-        mCameraSounds = (CheckBoxPreference) findPreference(KEY_CAMERA_SOUNDS);
-        mCameraSounds.setPersistent(false);
-        mCameraSounds.setChecked(SystemProperties.getBoolean(
-                PROP_CAMERA_SOUND, true));
         mLockSounds = (CheckBoxPreference) findPreference(KEY_LOCK_SOUNDS);
         mLockSounds.setPersistent(false);
         mLockSounds.setChecked(Settings.System.getInt(resolver,
@@ -204,6 +207,12 @@ public class SoundSettings extends SettingsPreferenceFragment implements
         mVolumeWakeScreen = (CheckBoxPreference) findPreference(KEY_VOLUME_WAKE_SCREEN);
         mVolumeWakeScreen.setChecked(Settings.System.getInt(resolver,
                 Settings.System.VOLUME_WAKE_SCREEN, 0) == 1);
+
+        mCameraSounds = (ListPreference) findPreference(KEY_CAMERA_SOUNDS);
+        mCameraSounds.setOnPreferenceChangeListener(this);
+        final int currentCamSound = SystemProperties.getInt(PROP_CAMERA_SOUND, 1);
+        mCameraSounds.setValue(Integer.toString(currentCamSound));
+        mCameraSounds.setSummary(mCameraSounds.getEntry());
 
         mRingtonePreference = findPreference(KEY_RINGTONE);
         mNotificationPreference = findPreference(KEY_NOTIFICATION_SOUND);
@@ -342,10 +351,11 @@ public class SoundSettings extends SettingsPreferenceFragment implements
             Settings.System.putInt(getContentResolver(), Settings.System.HAPTIC_FEEDBACK_ENABLED,
                     mHapticFeedback.isChecked() ? 1 : 0);
 
-        } else if (preference == mCameraSounds) {
-            SystemProperties.set(PROP_CAMERA_SOUND, mCameraSounds.isChecked() ? "1" : "0");
-
-
+//        } else if (preference == mCameraSounds) {
+//           final int value = Integer.valueOf((String)objValue);
+//           final int index = mCameraSounds.findIndexOfValue((String) objValue);
+//            SystemProperties.set(PROP_CAMERA_SOUND, (String)objValue);          
+//            mCameraSounds.setSummary(mCameraSounds.getEntries()[index]);
         } else if (preference == mLockSounds) {
             Settings.System.putInt(getContentResolver(), Settings.System.LOCKSCREEN_SOUNDS_ENABLED,
                     mLockSounds.isChecked() ? 1 : 0);
@@ -413,6 +423,14 @@ public class SoundSettings extends SettingsPreferenceFragment implements
             Settings.System.putInt(getContentResolver(),
                     Settings.System.MUTE_ANNOYING_NOTIFICATIONS_THRESHOLD, val);
         }
+
+        if (preference == mCameraSounds) {
+           final int value = Integer.valueOf((String)objValue);
+           final int index = mCameraSounds.findIndexOfValue((String) objValue);
+            SystemProperties.set(PROP_CAMERA_SOUND, (String)objValue);
+            mCameraSounds.setSummary(mCameraSounds.getEntries()[index]);
+        }
+
 
 
         return true;
