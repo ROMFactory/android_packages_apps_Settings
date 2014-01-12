@@ -513,8 +513,8 @@ public class Settings extends PreferenceActivity
                 LocationSettings.class.getName().equals(fragmentName) ||
                 ToggleAccessibilityServicePreferenceFragment.class.getName().equals(fragmentName) ||
                 PrintSettingsFragment.class.getName().equals(fragmentName) ||
-                PrintServiceSettingsFragment.class.getName().equals(fragmentName)) {
                 BlacklistSettings.class.getName().equals(fragmentName) ||
+                PrintServiceSettingsFragment.class.getName().equals(fragmentName)) {
             intent.putExtra(EXTRA_UI_OPTIONS, ActivityInfo.UIOPTION_SPLIT_ACTION_BAR_WHEN_NARROW);
         }
 

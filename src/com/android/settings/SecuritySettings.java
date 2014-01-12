@@ -138,7 +138,6 @@ public class SecuritySettings extends RestrictedSettingsFragment
     private CheckBoxPreference mLockRingBattery;
     private CheckBoxPreference mMaximizeKeyguardWidgets;
     private CheckBoxPreference mLockScreenPowerMenu;
-    private ListPreference mSmsSecurityCheck;
     private PreferenceScreen mBlacklist;
 
     @Override
@@ -377,26 +376,12 @@ public class SecuritySettings extends RestrictedSettingsFragment
                 deviceAdminCategory.removePreference(mToggleVerifyApps);
             } else {
                 mToggleVerifyApps.setEnabled(false);
-
-            // App security settings
-            addPreferencesFromResource(R.xml.security_settings_app_cyanogenmod);
-            mSmsSecurityCheck = (ListPreference) root.findPreference(KEY_SMS_SECURITY_CHECK_PREF);
-            mBlacklist = (PreferenceScreen) root.findPreference(KEY_BLACKLIST);
-
-            // Determine options based on device telephony support
-            if (pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
-                mSmsSecurityCheck = (ListPreference) root.findPreference(KEY_SMS_SECURITY_CHECK_PREF);
-                mSmsSecurityCheck.setOnPreferenceChangeListener(this);
-                int smsSecurityCheck = Integer.valueOf(mSmsSecurityCheck.getValue());
-                updateSmsSecuritySummary(smsSecurityCheck);
-            } else {
-                // No telephony, remove dependent options
-                PreferenceGroup appCategory = (PreferenceGroup)
-                        root.findPreference(KEY_APP_SECURITY_CATEGORY);
-                appCategory.removePreference(mSmsSecurityCheck);
-                appCategory.removePreference(mBlacklist);
-            }
+	    }
         }
+
+        mBlacklist = (PreferenceScreen) root.findPreference(KEY_BLACKLIST);
+
+
 
         mNotificationAccess = findPreference(KEY_NOTIFICATION_ACCESS);
         if (mNotificationAccess != null) {
