@@ -476,5 +476,8 @@
     <string name="camera_sounds_entry_realistic">Realistic (click)</string>
     <string name="camera_sounds_entry_off">Disabled (ILLEGAL in some areas)</string>
 
+    <string name="lockscreen_glowpad_torch_title">Glowpad Torch</string>	
+    <string name="lockscreen_glowpad_torch_summary">Double-tap and hold to start torch</string>
+
 
 </resources>

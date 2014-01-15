@@ -100,6 +100,7 @@ public class SecuritySettings extends RestrictedSettingsFragment
 
     private static final String KEY_APP_SECURITY_CATEGORY = "app_security";
     private static final String KEY_BLACKLIST = "blacklist";
+    private static final String PREF_LOCKSCREEN_TOCH = "lockscreen_torch";
 
     private PackageManager mPM;
     private DevicePolicyManager mDPM;
@@ -112,6 +113,7 @@ public class SecuritySettings extends RestrictedSettingsFragment
     private CheckBoxPreference mVisiblePattern;
 
     private CheckBoxPreference mShowPassword;
+    private CheckBoxPreference mGlowpadTorch;
 
     private KeyStore mKeyStore;
     private Preference mResetCredentials;
@@ -236,6 +238,13 @@ public class SecuritySettings extends RestrictedSettingsFragment
             mLockRingBattery.setChecked(Settings.System.getInt(getContentResolver(),
                     Settings.System.BATTERY_AROUND_LOCKSCREEN_RING, 0) == 1);
         }
+
+        mGlowpadTorch = (CheckBoxPreference) findPreference(
+                PREF_LOCKSCREEN_TORCH);
+        mGlowpadTorch.setChecked(Settings.System.getInt(
+                getActivity().getApplicationContext().getContentResolver(),
+                Settings.System.LOCKSCREEN_GLOWPAD_TORCH, 0) == 1);
+        mGlowpadTorch.setOnPreferenceChangeListener(this);
 
         mMaximizeKeyguardWidgets = (CheckBoxPreference) root.findPreference(LOCKSCREEN_MAXIMIZE_WIDGETS);
         if (mMaximizeKeyguardWidgets != null) {
@@ -712,6 +721,10 @@ public class SecuritySettings extends RestrictedSettingsFragment
         if (preference == mBlurRadius) {
             Settings.System.putInt(getContentResolver(),
                     Settings.System.LOCKSCREEN_BLUR_RADIUS, (Integer)value);
+        } else if (preference == mGlowpadTorch) {
+            Settings.System.putInt(getContentResolver(),
+                    Settings.System.LOCKSCREEN_GLOWPAD_TORCH,
+                    (Boolean) objValue ? 1 : 0);
         }
         return true;
     }

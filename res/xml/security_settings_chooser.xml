@@ -42,6 +42,11 @@
             android:defaultValue="true" 
             android:persistent="false"/>
 
+        <CheckBoxPreference
+            android:key="lockscreen_torch"
+            android:title="@string/lockscreen_glowpad_torch_title"
+            android:summary="@string/lockscreen_glowpad_torch_summary" />
+
         <Preference
             android:fragment="org.pcarenza.controlroom.interfacesettings.LockscreenTargets"
             android:key="lockscreen_targets"
