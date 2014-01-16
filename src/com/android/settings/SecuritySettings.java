@@ -100,7 +100,7 @@ public class SecuritySettings extends RestrictedSettingsFragment
 
     private static final String KEY_APP_SECURITY_CATEGORY = "app_security";
     private static final String KEY_BLACKLIST = "blacklist";
-    private static final String PREF_LOCKSCREEN_TOCH = "lockscreen_torch";
+    private static final String PREF_LOCKSCREEN_TORCH = "lockscreen_torch";
 
     private PackageManager mPM;
     private DevicePolicyManager mDPM;
@@ -724,7 +724,7 @@ public class SecuritySettings extends RestrictedSettingsFragment
         } else if (preference == mGlowpadTorch) {
             Settings.System.putInt(getContentResolver(),
                     Settings.System.LOCKSCREEN_GLOWPAD_TORCH,
-                    (Boolean) objValue ? 1 : 0);
+                    (Boolean) value ? 1 : 0);
         }
         return true;
     }
