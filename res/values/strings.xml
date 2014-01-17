@@ -4959,4 +4959,6 @@
     <!-- Delete apn confirmation dialog message -->
     <string name="confirm_delete_apn">The APN will be deleted.</string>
 
+    <!-- SuperSU header name - the app hides itself from launcher based on this resource name being present in com.android.settings -->
+    <string name="supersu_title">SuperSU</string>
 </resources>
