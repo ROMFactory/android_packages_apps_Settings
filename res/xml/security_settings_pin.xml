@@ -45,7 +45,11 @@
         <CheckBoxPreference
             android:key="lockscreen_maximize_widgets"
             android:title="@string/security_maximize_widgets_title"
+<<<<<<< HEAD
             android:dependency="keyguard_enable_widgets"/>
+=======
+            android:persistent="false"/>
+>>>>>>> 93e4ebb... settings: remove dependencies for max widget lockscreens
 
         <PreferenceScreen
             android:fragment="com.android.settings.OwnerInfoSettings"
