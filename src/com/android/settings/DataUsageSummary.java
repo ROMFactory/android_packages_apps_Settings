@@ -141,7 +141,7 @@ import com.android.settings.net.UidDetail;
 import com.android.settings.net.UidDetailProvider;
 import com.android.settings.widget.ChartDataUsageView;
 import com.android.settings.widget.ChartDataUsageView.DataUsageChartListener;
-import com.android.settings.widget.PieChartView;
+import com.android.internal.widget.PieChartView;
 import com.google.android.collect.Lists;
 
 import libcore.util.Objects;

@@ -81,7 +81,7 @@
 
         </LinearLayout>
 
-        <com.android.settings.widget.PieChartView
+        <com.android.internal.widget.PieChartView
             android:id="@+id/app_pie_chart"
             android:layout_width="160dip"
             android:layout_height="160dip" />
