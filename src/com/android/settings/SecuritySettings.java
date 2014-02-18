@@ -101,6 +101,7 @@ public class SecuritySettings extends RestrictedSettingsFragment
     private static final String KEY_APP_SECURITY_CATEGORY = "app_security";
     private static final String KEY_BLACKLIST = "blacklist";
     private static final String PREF_LOCKSCREEN_TORCH = "lockscreen_torch";
+    private static final String KEY_BLACKLIST = "blacklist";
 
     private PackageManager mPM;
     private DevicePolicyManager mDPM;
@@ -390,7 +391,11 @@ public class SecuritySettings extends RestrictedSettingsFragment
 
         mBlacklist = (PreferenceScreen) root.findPreference(KEY_BLACKLIST);
 
-
+        // Determine options based on device telephony support
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
+            // No telephony, remove dependent options
+            root.removePreference(mBlacklist);
+        }
 
         mNotificationAccess = findPreference(KEY_NOTIFICATION_ACCESS);
         if (mNotificationAccess != null) {
